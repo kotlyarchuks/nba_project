@@ -1,11 +1,22 @@
+{% extends 'games/base.html' %}
+{% block 'content' %}
 {% for game in data %}
 {% if game.winner == 'home' %}
 <div>
-    <p><b>{{game.home_team}} {{game.home_team_score}}</b> - {{game.away_team_score}} {{game.away_team}}</p>
+    <p>
+        <a href="{% url 'detail' game.id %}">
+            <b>{{game.home_team}} {{game.home_team_score}}</b> - {{game.away_team_score}} {{game.away_team}}
+        </a>
+    </p>
 </div>
 {% else %}
 <div>
-    <p>{{game.home_team}} {{game.home_team_score}} - <b>{{game.away_team_score}} {{game.away_team}}</b></p>
+    <p>
+        <a href="{% url 'detail' game.id %}">
+            {{game.home_team}} {{game.home_team_score}} - <b>{{game.away_team_score}} {{game.away_team}}</b>
+        </a>
+    </p>
 </div>
 {% endif %}
 {% endfor %}
+{% endblock 'content' %}

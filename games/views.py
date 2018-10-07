@@ -2,6 +2,9 @@ from django.shortcuts import render
 import requests
 from django.utils import timezone
 
+import urllib.request
+import json
+
 # https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=2018-10-07&LeagueID=00
 
 
@@ -38,6 +41,7 @@ def index(request):
         else:
             winner = 'away'
         data.append({
+            'id': game,
             'home_team': row[0][5] + " " + row[0][6],
             'away_team': row[1][5] + " " + row[1][6],
             'home_team_score': row[0][-1],
@@ -48,4 +52,20 @@ def index(request):
     return render(request, 'games/index.html', {'data': data})
 
 
-# https://stats.nba.com/stats/boxscoresummaryv2?GameID=0011800043
+def detail(request, game_id):
+    # url = f"https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/00{game_id}_gamedetail.json"
+    # req_headers = {
+    #     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    #     'Accept-Encoding': 'gzip, deflate',
+    #     'Accept-Language': 'en-US,en;q=0.8',
+    #     'Connection': 'keep-alive',
+    #     'Host': 'stats.nba.com',
+    #     'Upgrade-Insecure-Requests': '1',
+    #     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+    # }
+    # req = requests.get(url, headers=req_headers)
+    url = f"https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/00{game_id}_gamedetail.json"
+    with urllib.request.urlopen(url) as url_res:
+        data = json.loads(url_res.read().decode())
+
+    return render(request, 'games/detail.html', {'data': data})
