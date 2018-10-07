@@ -1,0 +1,11 @@
+{% for game in data %}
+{% if game.winner == 'home' %}
+<div>
+    <p><b>{{game.home_team}} {{game.home_team_score}}</b> - {{game.away_team_score}} {{game.away_team}}</p>
+</div>
+{% else %}
+<div>
+    <p>{{game.home_team}} {{game.home_team_score}} - <b>{{game.away_team_score}} {{game.away_team}}</b></p>
+</div>
+{% endif %}
+{% endfor %}
