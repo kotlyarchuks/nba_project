@@ -44,6 +44,10 @@ nav {
     color: #555;
 }
 
+.game-leaders {
+    margin-top: 15px;
+}
+
 .reddit-posts__list {
     text-align: left;
 }

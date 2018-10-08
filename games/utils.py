@@ -21,13 +21,41 @@ def api_request(url):
         raise Exception('Something went wrong with request to NBA!')
 
 
+def split_array(arr, size):
+    arrs = []
+    while len(arr) > size:
+        pice = arr[:size]
+        arrs.append(pice)
+        arr = arr[size:]
+    arrs.append(arr)
+    return arrs
+
+
 def today_games_list():
     today = timezone.now() + timezone.timedelta(days=-1)
     today = today.strftime("%Y-%m-%d")
     url = f"https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate={today}&LeagueID=00"
     response = api_request(url)
     games_list = [game[2] for game in response['resultSets'][0]['rowSet']]
-    data = []
+    leaders_row = response['resultSets'][7]['rowSet']
+    leaders = []
+    arrs = split_array(leaders_row, 2)
+    for arr in arrs:
+        leaders.append({
+            'id': arr[0][0],
+            'home_team_short': arr[1][4],
+            'away_team_short': arr[0][4],
+            'home_leaders': {
+                'pts': arr[1][6] + " - " + str(arr[1][7]),
+                'reb': arr[1][9] + " - " + str(arr[1][10]),
+                'ast': arr[1][12] + " - " + str(arr[1][13])},
+            'away_leaders': {
+                'pts': arr[0][6] + " - " + str(arr[0][7]),
+                'reb': arr[0][9] + " - " + str(arr[0][10]),
+                'ast': arr[0][12] + " - " + str(arr[0][13])}
+        })
+
+    scores = []
     for game in games_list:
         url = f"https://stats.nba.com/stats/boxscoresummaryv2?GameID={game}"
         response = api_request(url)
@@ -36,14 +64,19 @@ def today_games_list():
             winner = 'home'
         else:
             winner = 'away'
-        data.append({
+        scores.append({
             'id': game,
             'home_team': row[0][5] + " " + row[0][6],
             'away_team': row[1][5] + " " + row[1][6],
             'home_team_score': row[0][-1],
             'away_team_score': row[1][-1],
-            'winner': winner
+            'winner': winner,
         })
+
+    data = []
+    for score, leader in zip(scores, leaders):
+        data.append({**score, **leader})
+
     return data
 
 

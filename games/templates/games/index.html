@@ -4,19 +4,48 @@
     <div class="today-scores">
         <h4 class="header">Today scores</h4>
         {% for game in data %}
-        {% if game.winner == 'home' %}
         <div class="today-scores__list content-section">
+            {% if game.winner == 'home' %}
             <a href="{% url 'detail' game.id %}">
                 <b>{{game.home_team}} {{game.home_team_score}}</b> - {{game.away_team_score}} {{game.away_team}}
             </a>
-        </div>
-        {% else %}
-        <div class="today-scores__list content-section">
+            {% else %}
             <a href="{% url 'detail' game.id %}">
                 {{game.home_team}} {{game.home_team_score}} - <b>{{game.away_team_score}} {{game.away_team}}</b>
             </a>
+            {% endif %}
+            <div class="game-leaders row justify-content-center">
+                <div class="col-10 stats__team">
+                    <div class="row stats__header_row stats__row">
+                        <div class="col-5">
+                            {{game.home_team_short}}
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-5">
+                            {{game.away_team_short}}
+                        </div>
+                    </div>
+                    <div class="row stats__row">
+                        <div class="col-5">
+                            {{game.home_leaders.pts}}</div>
+                        <div class="col-2">PTS</div>
+                        <div class="col-5">
+                            {{game.away_leaders.pts}}
+                        </div>
+                    </div>
+                    <div class="row stats__row">
+                        <div class="col-5">{{game.home_leaders.reb}}</div>
+                        <div class="col-2">REB</div>
+                        <div class="col-5">{{game.away_leaders.reb}}</div>
+                    </div>
+                    <div class="row stats__row">
+                        <div class="col-5">{{game.home_leaders.ast}}</div>
+                        <div class="col-2">AST</div>
+                        <div class="col-5">{{game.away_leaders.ast}}</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endif %}
         {% endfor %}
     </div>
     <div class="reddit-posts">
@@ -43,7 +72,10 @@
     <div class="sidebar-content">
         <h4 class="header">Standings</h4>
         <div class="standings content-section">
-            There will be standings
+            There will be standings table
+        </div>
+        <div class="leaders content-section">
+            There will be leaders table
         </div>
     </div>
 </div>
