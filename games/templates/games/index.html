@@ -1,22 +1,50 @@
 {% extends 'games/base.html' %}
 {% block 'content' %}
-{% for game in data %}
-{% if game.winner == 'home' %}
-<div>
-    <p>
-        <a href="{% url 'detail' game.id %}">
-            <b>{{game.home_team}} {{game.home_team_score}}</b> - {{game.away_team_score}} {{game.away_team}}
-        </a>
-    </p>
+<div class="col-8 main-content">
+    <div class="today-scores">
+        <h4 class="header">Today scores</h4>
+        {% for game in data %}
+        {% if game.winner == 'home' %}
+        <div class="today-scores__list content-section">
+            <a href="{% url 'detail' game.id %}">
+                <b>{{game.home_team}} {{game.home_team_score}}</b> - {{game.away_team_score}} {{game.away_team}}
+            </a>
+        </div>
+        {% else %}
+        <div class="today-scores__list content-section">
+            <a href="{% url 'detail' game.id %}">
+                {{game.home_team}} {{game.home_team_score}} - <b>{{game.away_team_score}} {{game.away_team}}</b>
+            </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="reddit-posts">
+        <h4 class="header">Top reddit posts</h4>
+        <div class="reddit-posts__list">
+            {% for post in posts %}
+            <div class="content-section">
+                <p>
+                    <div class="post__title">
+                        <a href="https://www.reddit.com{{post.link}}" target="_blank">
+                            {{post.title}}
+                        </a>
+                    </div>
+                    <div class="post__link"><a href="{{post.url}}" target="_blank">{{post.url}}</a></div>
+                    <br>
+                    <div class="post__info">{{post.score}} score, {{post.comments}} comments</div>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
-{% else %}
-<div>
-    <p>
-        <a href="{% url 'detail' game.id %}">
-            {{game.home_team}} {{game.home_team_score}} - <b>{{game.away_team_score}} {{game.away_team}}</b>
-        </a>
-    </p>
+<div class="col-4 side-content">
+    <div class="sidebar-content">
+        <h4 class="header">Standings</h4>
+        <div class="standings content-section">
+            There will be standings
+        </div>
+    </div>
 </div>
-{% endif %}
-{% endfor %}
 {% endblock 'content' %}

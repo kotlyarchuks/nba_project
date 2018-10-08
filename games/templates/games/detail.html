@@ -1,4 +1,164 @@
 {% extends 'games/base.html' %}
+{% load mathfilters %}
 {% block 'content' %}
-{{data}}
+<div class="col-12">
+    <h2 class="mt-5 mb-3 header">{{data.home_team}} {{data.score}} {{data.away_team}}</h2>
+    <div class="row">
+        <div class="col-4 stats__team">
+            <div class="row stats__header_row stats__row">
+                <div class="col-4">
+                    {{data.home_team_short}}
+                </div>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    {{data.away_team_short}}
+                </div>
+            </div>
+            <div class="row stats__row">
+                <div class="col-4">
+                    {{data.home_fg.fgm}}/{{data.home_fg.fga}} ({{data.home_fg.fgp}})</div>
+                <div class="col-4">FG</div>
+                <div class="col-4">{{data.away_fg.fgm}}/{{data.away_fg.fga}} ({{data.away_fg.fgp}})</div>
+            </div>
+            <div class="row stats__row">
+                <div class="col-4">{{data.home_3p.3pm}}/{{data.home_3p.3pa}} ({{data.home_3p.3pp}})</div>
+                <div class="col-4">3P</div>
+                <div class="col-4">{{data.away_3p.3pm}}/{{data.away_3p.3pa}} ({{data.away_3p.3pp}})</div>
+            </div>
+        </div>
+    </div>
+    <h3 class="header">{{data.home_team_short}}</h3>
+    <div class="boxscore">
+        <table class="boxscore__table">
+            <tr class="boxscore__table_header">
+                <th>Player</th>
+                <th>MIN</th>
+                <th>FGM</th>
+                <th>FGA</th>
+                <th>FG%</th>
+                <th>3PM</th>
+                <th>3PA</th>
+                <th>3P%</th>
+                <th>FTM</th>
+                <th>FTA</th>
+                <th>FT%</th>
+                <th>OREB</th>
+                <th>DREB</th>
+                <th>REB</th>
+                <th>AST</th>
+                <th>TOV</th>
+                <th>STL</th>
+                <th>BLK</th>
+                <th>PF</th>
+                <th>PTS</th>
+            </tr>
+            {% for player in data.home_players %}
+            <tr>
+                <td>{{player.fn}} {{player.ln}} <span class="position">{{player.pos}}</span></td>
+                <td>{{player.min}}:{{player.sec}}</td>
+                <td>{{player.fgm}}</td>
+                <td>{{player.fga}}</td>
+                {% if player.fgm == 0 or player.fga == 0 %}
+                <td>0</td>
+                {% else %}
+                <td>{{ player.fgm|div:player.fga|mul:100|floatformat:1 }}</td>
+                {% endif %}
+                <td>{{player.tpm}}</td>
+                <td>{{player.tpa}}</td>
+                {% if player.tpm == 0 or player.tpa == 0 %}
+                <td>0</td>
+                {% else %}
+                <td>{{ player.tpm|div:player.tpa|mul:100|floatformat:1 }}</td>
+                {% endif %}
+                <td>{{player.ftm}}</td>
+                <td>{{player.fta}}</td>
+                {% if player.ftm == 0 or player.fta == 0 %}
+                <td>0</td>
+                {% else %}
+                <td>{{ player.ftm|div:player.fta|mul:100|floatformat:1 }}</td>
+                {% endif %}
+                <td>{{player.oreb}}</td>
+                <td>{{player.dreb}}</td>
+                <td>{{player.reb}}</td>
+                <td>{{player.ast}}</td>
+                <td>{{player.tov}}</td>
+                <td>{{player.stl}}</td>
+                <td>{{player.blk}}</td>
+                <td>{{player.pf}}</td>
+                <td>{{player.pts}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <h3 class="header">{{data.away_team_short}}</h3>
+    <div class="boxscore">
+        <table class="boxscore__table">
+            <tr class="boxscore__table_header">
+                <th>Player</th>
+                <th>MIN</th>
+                <th>FGM</th>
+                <th>FGA</th>
+                <th>FG%</th>
+                <th>3PM</th>
+                <th>3PA</th>
+                <th>3P%</th>
+                <th>FTM</th>
+                <th>FTA</th>
+                <th>FT%</th>
+                <th>OREB</th>
+                <th>DREB</th>
+                <th>REB</th>
+                <th>AST</th>
+                <th>TOV</th>
+                <th>STL</th>
+                <th>BLK</th>
+                <th>PF</th>
+                <th>PTS</th>
+            </tr>
+            {% for player in data.away_players %}
+            <tr>
+                <td>{{player.fn}} {{player.ln}} <span class="position">{{player.pos}}</span></td>
+                <td>{{player.min}}:{{player.sec}}</td>
+                <td>{{player.fgm}}</td>
+                <td>{{player.fga}}</td>
+                {% if player.fgm == 0 or player.fga == 0 %}
+                <td>0</td>
+                {% else %}
+                <td>{{ player.fgm|div:player.fga|mul:100|floatformat:1 }}</td>
+                {% endif %}
+                <td>{{player.tpm}}</td>
+                <td>{{player.tpa}}</td>
+                {% if player.tpm == 0 or player.tpa == 0 %}
+                <td>0</td>
+                {% else %}
+                <td>{{ player.tpm|div:player.tpa|mul:100|floatformat:1 }}</td>
+                {% endif %}
+                <td>{{player.ftm}}</td>
+                <td>{{player.fta}}</td>
+                {% if player.ftm == 0 or player.fta == 0 %}
+                <td>0</td>
+                {% else %}
+                <td>{{ player.ftm|div:player.fta|mul:100|floatformat:1 }}</td>
+                {% endif %}
+                <td>{{player.oreb}}</td>
+                <td>{{player.dreb}}</td>
+                <td>{{player.reb}}</td>
+                <td>{{player.ast}}</td>
+                <td>{{player.tov}}</td>
+                <td>{{player.stl}}</td>
+                <td>{{player.blk}}</td>
+                <td>{{player.pf}}</td>
+                <td>{{player.pts}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 {% endblock 'content' %}
+
+
+{% comment %} <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4"></div>
+    <div class="col-4"></div>
+</div> {% endcomment %}
