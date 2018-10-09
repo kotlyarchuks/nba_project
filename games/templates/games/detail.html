@@ -1,5 +1,6 @@
 {% extends 'games/base.html' %}
 {% load mathfilters %}
+{% load crispy_forms_tags %}
 {% block 'content' %}
 <div class="col-12">
     <h2 class="mt-5 mb-3 header">{{data.home_team}} {{data.score}} {{data.away_team}}</h2>
@@ -152,6 +153,23 @@
             </tr>
             {% endfor %}
         </table>
+    </div>
+    <div class="comments__add row justify-content-center">
+        <div class="col-8">
+        <form action="{% url 'detail' data.game_id %}" method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <input class="btn comment-button" type="submit" value="Post" />
+        </form>
+        </div>
+    </div>
+    <div class="comments__list">
+        {% for comment in comments %}
+        <div class="comments__comment">
+            <p>{{comment.author}} - {{comment.pub_date}}</p>
+            <p>{{comment.text}}</p>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock 'content' %}

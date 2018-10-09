@@ -91,6 +91,7 @@ def get_boxscore(game_id):
         f"https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/00{game_id}_gamedetail.json")['g']
 
     data = {
+        'game_id': raw_data['gid'],
         'home_team': raw_data['hls']['tc'] + " " + raw_data['hls']['tn'],
         'home_team_short': raw_data['hls']['ta'],
         'away_team': raw_data['vls']['tc'] + " " + raw_data['vls']['tn'],
