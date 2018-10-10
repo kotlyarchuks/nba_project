@@ -22,7 +22,7 @@ def detail(request, game_id):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            comment = Comment(game=game_id, author=form.cleaned_data.get('author'), text=form.cleaned_data.get('text'))
+            comment = Comment(game=game_id, author=request.user, text=form.cleaned_data.get('text'))
             comment.save()
             return HttpResponseRedirect(reverse('detail', args=[game_id]))
     else:

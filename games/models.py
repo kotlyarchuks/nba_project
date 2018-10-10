@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # class Game(models.Model):
 #     date = models.DateTimeField()
@@ -14,7 +15,7 @@ from django.utils import timezone
 class Comment(models.Model):
     game = models.IntegerField()
     pub_date = models.DateTimeField(default=timezone.now())
-    author = models.CharField(max_length=50)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     likes = models.IntegerField(default=0)
 
