@@ -1,0 +1,11 @@
+{% extends 'games/base.html' %} {% load mathfilters %} {% load crispy_forms_tags %} {% block 'content' %}
+{% load crispy_forms_tags %}
+<div class="col-4">
+  <form action="{% url 'register' %}" method="POST">
+    <legend>Create your account:</legend>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Create" class="btn btn-outline-info">
+  </form>
+</div>
+{% endblock 'content' %}
