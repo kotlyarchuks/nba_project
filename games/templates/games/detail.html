@@ -154,8 +154,8 @@
             {% endfor %}
         </table>
     </div>
-    <div class="comments__add row justify-content-center">
-        <div class="col-8">
+    <div class="comments__add row mb-3">
+        <div class="col-4">
         <form action="{% url 'detail' data.game_id %}" method="POST">
             {% csrf_token %}
             {{form|crispy}}
@@ -165,18 +165,13 @@
     </div>
     <div class="comments__list">
         {% for comment in comments %}
-        <div class="comments__comment">
-            <p>{{comment.author}} - {{comment.pub_date}}</p>
+        <div class="comments__comment row">
+            <div class="content-section col-4 mb-3">
+            <p><i>{{comment.author}} - {{comment.pub_date|date:'d F, H:i:s'}}</i></p>
             <p>{{comment.text}}</p>
+            </div>
         </div>
         {% endfor %}
     </div>
 </div>
 {% endblock 'content' %}
-
-
-{% comment %} <div class="row">
-    <div class="col-4"></div>
-    <div class="col-4"></div>
-    <div class="col-4"></div>
-</div> {% endcomment %}

@@ -103,3 +103,14 @@ nav {
 .position {
     font-size: 8px;
 }
+
+.comment-button {
+    border: 1px solid #EBA47E;
+    background: transparent;
+    color: #555;
+}
+
+.comment-button:hover {
+    background: #EBA47E;
+    color: #fff;
+}

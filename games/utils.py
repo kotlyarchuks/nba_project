@@ -2,6 +2,7 @@ from django.utils import timezone
 import requests
 import urllib.request
 import json
+import praw
 
 
 def api_request(url):
@@ -124,24 +125,52 @@ def get_boxscore(game_id):
 
 
 def get_reddit_posts():
-    req_headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-    }
-    url = "https://www.reddit.com/r/nba/hot.json?limit=20"
-    req = requests.get(url, headers=req_headers)
-    raw_data = req.json()['data']['children']
-    return [
-        {
-            'title': post['data']['title'],
-            'text':post['data']['selftext'],
-            'score':post['data']['score'],
-            'url':post['data']['url'],
-            'comments':post['data']['num_comments'],
-            'link':post['data']['permalink'],
-        }
-        for post in raw_data]
+    # req_headers = {
+    #     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    #     'Accept-Encoding': 'gzip, deflate',
+    #     'Accept-Language': 'en-US,en;q=0.8',
+    #     'Connection': 'keep-alive',
+    #     'Upgrade-Insecure-Requests': '1',
+    #     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+    # }
+    # url = "https://www.reddit.com/r/nba/hot.json?limit=20"
+    # req = requests.get(url, headers=req_headers)
+    # raw_data = req.json()['data']['children']
+    # data = []
+    # for post in raw_data:
+    #     data.append({
+    #         'title': post['data']['title'],
+    #         'text': post['data']['selftext'],
+    #         'score': post['data']['score'],
+    #         'url': post['data']['url'],
+    #         'comments': post['data']['num_comments'],
+    #         'link': post['data']['permalink'],
+    #         'top_comment': requests.get(f"https://www.reddit.com{post['data']['permalink']}.json?sort=best", headers=req_headers).json()[1]['data']['children'][0]['data']['body']
+    #     })
+    # return data
+
+    reddit = praw.Reddit(client_id='zzyGytCYBexyAw',
+                         client_secret='CjlXDeEtCI_PPj2YQ-N8nPVylHQ',
+                         user_agent='nba_project v1.0 by /u/kotlyarchuky',
+                         username='kotlyarchuky',
+                         password='Feralpower3634')
+    nba = reddit.subreddit('nba')
+    posts = nba.hot(limit=20)
+    data = []
+    for post in posts:
+        post.comment_limit = 1
+        top_comment = post.comments[0]
+        data.append({
+            'title': post.title,
+            'text': post.selftext,
+            'score': post.score,
+            'url':post.url,
+            'comments':post.num_comments,
+            'link': post.permalink,
+            'top_comment': {
+                'author':top_comment.author,
+                'text': top_comment.body,
+                'score': top_comment.score
+            }
+        })
+    return data

@@ -63,6 +63,11 @@
                     <br>
                     <div class="post__info">{{post.score}} score, {{post.comments}} comments</div>
                 </p>
+                <div class="content-section">
+                    <p><i>{{post.top_comment.author}}</i></p>
+                    <p>{{post.top_comment.text}}</p>
+                    <p class="post__info">{{post.top_comment.score}} score</p>
+                </div>  
             </div>
             {% endfor %}
         </div>
