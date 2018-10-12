@@ -1,6 +1,30 @@
 {% extends 'games/base.html' %}
 {% load mathfilters %}
 {% load crispy_forms_tags %}
+
+{% block 'javascript' %}
+<!-- <script>
+    $('.comments__add form').submit(
+        function (e) {
+            console.log('CLICKED')
+            e.preventDefault()
+            let text = $('.comment-field').val()
+
+            $.ajax({
+                url: "{% url 'detail' data.game_id %}",
+                data: {
+                    'text': text
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                }
+            });
+        }
+    )
+</script> -->
+{% endblock 'javascript' %}
+
 {% block 'content' %}
 <div class="col-12">
     <h2 class="mt-5 mb-3 header">{{data.home_team}} {{data.score}} {{data.away_team}}</h2>
@@ -159,7 +183,7 @@
         <form action="{% url 'detail' data.game_id %}" method="POST">
             {% csrf_token %}
             {{form|crispy}}
-            <input class="btn comment-button" type="submit" value="Post" />
+            <input class="btn comment-button" id="comment-button" type="submit" value="Post" />
         </form>
         </div>
     </div>
@@ -175,3 +199,5 @@
     </div>
 </div>
 {% endblock 'content' %}
+
+

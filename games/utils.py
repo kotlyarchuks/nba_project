@@ -3,6 +3,7 @@ import requests
 import urllib.request
 import json
 import praw
+from praw.models import MoreComments
 
 
 def api_request(url):
@@ -159,16 +160,20 @@ def get_reddit_posts():
     data = []
     for post in posts:
         post.comment_limit = 1
-        top_comment = post.comments[0]
+        index = 0
+        top_comment = post.comments[index]
+        while isinstance(top_comment, MoreComments):
+            index += 1
+            top_comment = post.comments[index]
         data.append({
             'title': post.title,
             'text': post.selftext,
             'score': post.score,
-            'url':post.url,
-            'comments':post.num_comments,
+            'url': post.url,
+            'comments': post.num_comments,
             'link': post.permalink,
             'top_comment': {
-                'author':top_comment.author,
+                'author': top_comment.author,
                 'text': top_comment.body,
                 'score': top_comment.score
             }

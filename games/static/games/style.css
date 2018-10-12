@@ -104,6 +104,9 @@ nav {
     font-size: 8px;
 }
 
+.comment-field:focus {
+}
+
 .comment-button {
     border: 1px solid #EBA47E;
     background: transparent;
