@@ -12,8 +12,8 @@ from .models import Comment, Post, PostComment
 
 
 def index(request):
-    # data = today_games_list()
-    data = []
+    data = today_games_list()
+    # data = []
     posts = Post.objects.all()
 
     return render(request, 'games/index.html', {'data': data, 'posts': posts})
