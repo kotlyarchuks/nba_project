@@ -156,7 +156,7 @@ def get_reddit_posts():
                          username='kotlyarchuky',
                          password='Feralpower3634')
     nba = reddit.subreddit('nba')
-    posts = nba.hot(limit=20)
+    posts = nba.hot(limit=30)
     data = []
     for post in posts:
         post.comment_limit = 1
