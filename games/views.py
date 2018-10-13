@@ -1,6 +1,5 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect, JsonResponse
-from django_ajax.decorators import ajax
 from .utils import api_request, today_games_list, get_json, get_boxscore, get_reddit_posts
 from .forms import CommentForm
 from .models import Comment, Post, PostComment
@@ -16,19 +15,15 @@ def index(request):
     return render(request, 'games/index.html', {'data': data, 'posts': posts})
 
 
-# @ajax
 def detail(request, game_id):
     data = get_boxscore(game_id)
     comments = Comment.objects.filter(game=game_id).order_by('-pub_date')
 
     if request.method == 'POST':
-    # if request.is_ajax():
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = Comment(game=game_id, author=request.user, text=form.cleaned_data.get('text'))
             comment.save()
-            # comments = Comment.objects.all()
-            # return JsonResponse({'comments': comments})
             return HttpResponseRedirect(reverse('detail', args=[game_id]))
     else:
         form = CommentForm()
