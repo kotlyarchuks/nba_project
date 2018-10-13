@@ -164,7 +164,10 @@ def get_reddit_posts():
         top_comment = post.comments[index]
         while isinstance(top_comment, MoreComments):
             index += 1
-            top_comment = post.comments[index]
+            try:
+                top_comment = post.comments[index]
+            except Exception:
+                pass
         data.append({
             'title': post.title,
             'text': post.selftext,
