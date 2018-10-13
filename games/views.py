@@ -1,5 +1,5 @@
 from django.shortcuts import render, reverse
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from .utils import api_request, today_games_list, get_json, get_boxscore, get_reddit_posts
 from .forms import CommentForm
 from .models import Comment, Post, PostComment
@@ -7,8 +7,11 @@ from .models import Comment, Post, PostComment
 
 # https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=2018-10-07&LeagueID=00
 
-
 def index(request):
+    return HttpResponse('TEST')
+
+
+def index2(request):
     data = today_games_list()
     posts = Post.objects.all()
 
