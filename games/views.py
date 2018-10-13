@@ -7,12 +7,13 @@ from .models import Comment, Post, PostComment
 
 # https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=2018-10-07&LeagueID=00
 
+# def index(request):
+    # return HttpResponse('TEST')
+
+
 def index(request):
-    return HttpResponse('TEST')
-
-
-def index2(request):
-    data = today_games_list()
+    # data = today_games_list()
+    data = []
     posts = Post.objects.all()
 
     return render(request, 'games/index.html', {'data': data, 'posts': posts})
