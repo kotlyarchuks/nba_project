@@ -25,7 +25,7 @@ SECRET_KEY = '#pfq_hdkpgw3odi+ih*s!@83z_*btw=-v337-2*^l0*fuq!@1$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['kooch.online', 'localhost']
 
 
 # Application definition
@@ -113,11 +113,13 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = False
 
-USE_L10N = True
+USE_L10N = False
 
-USE_TZ = True
+USE_TZ = False
+
+DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S'
 
 
 # Static files (CSS, JavaScript, Images)

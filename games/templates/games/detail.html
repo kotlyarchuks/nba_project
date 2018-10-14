@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block 'javascript' %}
-<!-- <script>
+<script>
     $('.comments__add form').submit(
         function (e) {
             console.log('CLICKED')
@@ -15,14 +15,92 @@
                 data: {
                     'text': text
                 },
+                type: 'POST',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data)
+                    $('.comment-field').val('')
+                    console.log(data.comments)
+                    comments = $.parseJSON(data.comments)[0]
+                    date = moment(comments.pub_date).format("D MMMM, HH:mm:ss")
+                    $('.comments__list').prepend(
+                        "<div class='comments__comment row'>" +
+                        "<div class='content-section col-4 mb-3'>" +
+                        "<p><i>" +
+                        comments.author__username +
+                        " - " +
+                        date +
+                        "</i></p>" +
+                        "<p>" +
+                        comments.text +
+                        "</p>" +
+                        "</div>" +
+                        "</div>"
+                    )
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText)
                 }
             });
         }
     )
-</script> -->
+
+
+    $(function () {
+
+
+        // This function gets cookie with a given name
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        /*
+        The functions below will create a header with csrftoken
+        */
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        function sameOrigin(url) {
+            // test that a given url is a same-origin URL
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                    // Send the token to same-origin, relative URLs only.
+                    // Send the token only if the method warrants CSRF protection
+                    // Using the CSRFToken value acquired earlier
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+    });
+</script>
 {% endblock 'javascript' %}
 
 {% block 'content' %}
@@ -180,24 +258,22 @@
     </div>
     <div class="comments__add row mb-3">
         <div class="col-4">
-        <form action="{% url 'detail' data.game_id %}" method="POST">
-            {% csrf_token %}
-            {{form|crispy}}
-            <input class="btn comment-button" id="comment-button" type="submit" value="Post" />
-        </form>
+            <form action="{% url 'detail' data.game_id %}" method="POST">
+                {% csrf_token %}
+                {{form|crispy}}
+                <input class="btn comment-button" id="comment-button" type="submit" value="Post" />
+            </form>
         </div>
     </div>
     <div class="comments__list">
         {% for comment in comments %}
         <div class="comments__comment row">
             <div class="content-section col-4 mb-3">
-            <p><i>{{comment.author}} - {{comment.pub_date|date:'d F, H:i:s'}}</i></p>
-            <p>{{comment.text}}</p>
+                <p><i>{{comment.author}} - {{comment.pub_date|date:'d F, H:i:s'}}</i></p>
+                <p>{{comment.text}}</p>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 {% endblock 'content' %}
-
-

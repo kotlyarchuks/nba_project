@@ -3,6 +3,7 @@
 <div class="col-8 main-content">
     <div class="today-scores">
         <h4 class="header">Today scores</h4>
+        {% if data %}
         {% for game in data %}
         <div class="today-scores__list content-section">
             {% if game.winner == 'home' %}
@@ -47,6 +48,11 @@
             </div>
         </div>
         {% endfor %}
+        {% else %}
+        <div class="today-scores__list content-section">
+            No games today
+        </div>
+        {% endif %}
     </div>
     <div class="reddit-posts">
         <h4 class="header">Top reddit posts</h4>
@@ -67,7 +73,7 @@
                     <p><i>{{post.top_comment.author}}</i></p>
                     <p>{{post.top_comment.text}}</p>
                     <p class="post__info">{{post.top_comment.score}} score</p>
-                </div>  
+                </div>
             </div>
             {% endfor %}
         </div>
