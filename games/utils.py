@@ -37,50 +37,75 @@ def split_array(arr, size):
 def today_games_list():
     today = timezone.now() + timezone.timedelta(days=-2)
     today = today.strftime("%Y-%m-%d")
-    url = f"https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate={today}&LeagueID=00"
-    response = api_request(url)
-    games_list = [game[2] for game in response['resultSets'][0]['rowSet']]
-    if not games_list:
-        return []
-    leaders_row = response['resultSets'][7]['rowSet']
-    leaders = []
-    arrs = split_array(leaders_row, 2)
-    for arr in arrs:
-        leaders.append({
-            'id': arr[0][0],
-            'home_team_short': arr[1][4],
-            'away_team_short': arr[0][4],
-            'home_leaders': {
-                'pts': arr[1][6] + " - " + str(arr[1][7]),
-                'reb': arr[1][9] + " - " + str(arr[1][10]),
-                'ast': arr[1][12] + " - " + str(arr[1][13])},
-            'away_leaders': {
-                'pts': arr[0][6] + " - " + str(arr[0][7]),
-                'reb': arr[0][9] + " - " + str(arr[0][10]),
-                'ast': arr[0][12] + " - " + str(arr[0][13])}
-        })
-
-    scores = []
-    for game in games_list:
-        url = f"https://stats.nba.com/stats/boxscoresummaryv2?GameID={game}"
-        response = api_request(url)
-        row = response['resultSets'][5]['rowSet']
-        if row[0][-1] > row[1][-1]:
-            winner = 'home'
-        else:
-            winner = 'away'
-        scores.append({
-            'id': game,
-            'home_team': row[0][5] + " " + row[0][6],
-            'away_team': row[1][5] + " " + row[1][6],
-            'home_team_score': row[0][-1],
-            'away_team_score': row[1][-1],
-            'winner': winner,
-        })
-
+    url = "https://stats.nba.com/js/data/widgets/scores_leaders.json"
+    response = api_request(url)['items'][0]['items'][0]
+    arrs = split_array(response['playergametats'], 2)
     data = []
-    for score, leader in zip(scores, leaders):
-        data.append({**score, **leader})
+    for arr in arrs:
+        data.append(
+            {
+                'id': arr[0]['GAME_ID'],
+                'home_team': arr[1]['TEAM_CITY'] + " " + arr[1]['TEAM_NICKNAME'],
+                'away_team': arr[0]['TEAM_CITY'] + " " + arr[0]['TEAM_NICKNAME'],
+                'home_team_short': arr[1]['TEAM_ABBREVIATION'],
+                'away_team_short': arr[0]['TEAM_ABBREVIATION'],
+                'home_leaders': {
+                    'pts': arr[1]['PTS_PLAYER_NAME'] + " - " + str(arr[1]['PTS']),
+                    'reb': arr[1]['REB_PLAYER_NAME'] + " - " + str(arr[1]['REB']),
+                    'ast': arr[1]['AST_PLAYER_NAME'] + " - " + str(arr[1]['AST'])
+                },
+                'away_leaders': {
+                    'pts': arr[0]['PTS_PLAYER_NAME'] + " - " + str(arr[0]['PTS']),
+                    'reb': arr[0]['REB_PLAYER_NAME'] + " - " + str(arr[0]['REB']),
+                    'ast': arr[0]['AST_PLAYER_NAME'] + " - " + str(arr[0]['AST'])
+                }
+            }
+        )
+
+    # url = f"https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate={today}&LeagueID=00"
+    # response = api_request(url)
+    # games_list = [game[2] for game in response['resultSets'][0]['rowSet']]
+    # if not games_list:
+    #     return []
+    # leaders_row = response['resultSets'][7]['rowSet']
+    # leaders = []
+    # arrs = split_array(leaders_row, 2)
+    # for arr in arrs:
+    #     leaders.append({
+    #         'id': arr[0][0],
+    #         'home_team_short': arr[1][4],
+    #         'away_team_short': arr[0][4],
+    #         'home_leaders': {
+    #             'pts': arr[1][6] + " - " + str(arr[1][7]),
+    #             'reb': arr[1][9] + " - " + str(arr[1][10]),
+    #             'ast': arr[1][12] + " - " + str(arr[1][13])},
+    #         'away_leaders': {
+    #             'pts': arr[0][6] + " - " + str(arr[0][7]),
+    #             'reb': arr[0][9] + " - " + str(arr[0][10]),
+    #             'ast': arr[0][12] + " - " + str(arr[0][13])}
+    #     })
+
+    # scores = []
+    # for game in games_list:
+    #     url = f"https://stats.nba.com/stats/boxscoresummaryv2?GameID={game}"
+    #     response = api_request(url)
+    #     row = response['resultSets'][5]['rowSet']
+    #     if row[0][-1] > row[1][-1]:
+    #         winner = 'home'
+    #     else:
+    #         winner = 'away'
+    #     scores.append({
+    #         'id': game,
+    #         'home_team': row[0][5] + " " + row[0][6],
+    #         'away_team': row[1][5] + " " + row[1][6],
+    #         'home_team_score': row[0][-1],
+    #         'away_team_score': row[1][-1],
+    #         'winner': winner,
+    #     })
+
+    # data = []
+    # for score, leader in zip(scores, leaders):
+    #     data.append({**score, **leader})
 
     return data
 
@@ -129,29 +154,6 @@ def get_boxscore(game_id):
 
 
 def get_reddit_posts():
-    # req_headers = {
-    #     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    #     'Accept-Encoding': 'gzip, deflate',
-    #     'Accept-Language': 'en-US,en;q=0.8',
-    #     'Connection': 'keep-alive',
-    #     'Upgrade-Insecure-Requests': '1',
-    #     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-    # }
-    # url = "https://www.reddit.com/r/nba/hot.json?limit=20"
-    # req = requests.get(url, headers=req_headers)
-    # raw_data = req.json()['data']['children']
-    # data = []
-    # for post in raw_data:
-    #     data.append({
-    #         'title': post['data']['title'],
-    #         'text': post['data']['selftext'],
-    #         'score': post['data']['score'],
-    #         'url': post['data']['url'],
-    #         'comments': post['data']['num_comments'],
-    #         'link': post['data']['permalink'],
-    #         'top_comment': requests.get(f"https://www.reddit.com{post['data']['permalink']}.json?sort=best", headers=req_headers).json()[1]['data']['children'][0]['data']['body']
-    #     })
-    # return data
 
     reddit = praw.Reddit(client_id='zzyGytCYBexyAw',
                          client_secret='CjlXDeEtCI_PPj2YQ-N8nPVylHQ',
