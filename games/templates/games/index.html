@@ -1,6 +1,6 @@
 {% extends 'games/base.html' %}
 {% block 'content' %}
-<div class="col-8 main-content">
+<div class="col-md-8 col-sm-12 main-content">
     <div class="today-scores">
         <h4 class="header">Today scores</h4>
         {% if data %}
@@ -59,16 +59,14 @@
         <div class="reddit-posts__list">
             {% for post in posts %}
             <div class="content-section">
-                <p>
-                    <div class="post__title">
-                        <a href="https://www.reddit.com{{post.link}}" target="_blank">
-                            {{post.title}}
-                        </a>
-                    </div>
-                    <div class="post__link"><a href="{{post.url}}" target="_blank">{{post.url}}</a></div>
-                    <br>
-                    <div class="post__info">{{post.score}} score, {{post.comments}} comments</div>
-                </p>
+                <div class="post__title mt-3">
+                    <a href="https://www.reddit.com{{post.link}}" target="_blank">
+                        {{post.title}}
+                    </a>
+                </div>
+                <div class="post__link"><a href="{{post.url}}" target="_blank">{{post.url}}</a></div>
+                <br>
+                <div class="post__info">{{post.score}} score, {{post.comments}} comments</div>
                 <div class="content-section">
                     <p><i>{{post.top_comment.author}}</i></p>
                     <p>{{post.top_comment.text}}</p>
@@ -79,7 +77,7 @@
         </div>
     </div>
 </div>
-<div class="col-4 side-content">
+<div class="col-md-4 col-sm-12 side-content">
     <div class="sidebar-content">
         <h4 class="header">Standings</h4>
         <div class="standings content-section row">
