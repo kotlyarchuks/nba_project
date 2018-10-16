@@ -85,6 +85,10 @@ nav {
     text-decoration: underline;
 }
 
+.standings__row:nth-child(9n){
+    border-bottom: .1px solid #AAA;
+}
+
 .leaders__row:nth-of-type(5n) {
     margin-bottom: 10px;
 }
