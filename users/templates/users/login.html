@@ -1,11 +1,12 @@
 {% extends 'games/base.html' %} {% load mathfilters %} {% load crispy_forms_tags %} {% block 'content' %}
 {% load crispy_forms_tags %}
 <div class="col-4">
-  <form action="{% url 'login' %}" method="POST">
+  <form action="{% url 'login' %}" method="POST" class="mb-3">
     <legend>Log in:</legend>
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Enter" class="btn btn-outline-info">
   </form>
+  <span class="text-muted">Don't have an account yet? <a href="{% url 'register' %}">Sign up</a></span>
 </div>
 {% endblock 'content' %}

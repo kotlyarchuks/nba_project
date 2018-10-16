@@ -110,8 +110,41 @@
                 {% endfor %}
             </div>
         </div>
+        <h4 class="header">Leaders</h4>
         <div class="leaders content-section">
-            There will be leaders table
+            <span class="leaders__title">Points</span>
+            {% for pl in leaders.pts %}
+            <div class="leaders__row row justify-content-center">
+                <div class="col-7 leaders__name">
+                    {{pl.player}}
+                </div>
+                <div class="col-2">
+                    {{pl.num}}
+                </div>
+            </div>
+            {% endfor %}
+            <span class="leaders__title">Rebounds</span>
+            {% for pl in leaders.reb %}
+            <div class="leaders__row row justify-content-center">
+                <div class="col-7 leaders__name">
+                    {{pl.player}}
+                </div>
+                <div class="col-2">
+                    {{pl.num}}
+                </div>
+            </div>
+            {% endfor %}
+            <span class="leaders__title">Assists</span>
+            {% for pl in leaders.ast %}
+            <div class="leaders__row row justify-content-center">
+                <div class="col-7 leaders__name">
+                    {{pl.player}}
+                </div>
+                <div class="col-2">
+                    {{pl.num}}
+                </div>
+            </div>
+            {% endfor %}
         </div>
         <h4 class="header">Videos</h4>
         <div class="videos">

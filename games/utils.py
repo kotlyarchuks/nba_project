@@ -112,6 +112,32 @@ def get_standings():
     return data
 
 
+def get_leaders():
+    url = "https://stats.nba.com/js/data/widgets/home_season.json"
+    raw_data = _get_json(url)['items'][0]['items']
+    data = {
+        'pts': [],
+        'reb': [],
+        'ast': []
+    }
+    for row in raw_data[0]['playerstats'][:5]:
+        data['pts'].append({
+            'player': row['PLAYER_NAME'],
+            'num': row['PTS']
+        })
+    for row in raw_data[1]['playerstats'][:5]:
+        data['reb'].append({
+            'player': row['PLAYER_NAME'],
+            'num': row['REB']
+        })
+    for row in raw_data[2]['playerstats'][:5]:
+        data['ast'].append({
+            'player': row['PLAYER_NAME'],
+            'num': row['AST']
+        })
+    return data
+
+
 def get_reddit_posts():
 
     reddit = praw.Reddit(client_id='zzyGytCYBexyAw',
