@@ -88,6 +88,17 @@
         <div class="leaders content-section">
             There will be leaders table
         </div>
+        <h4 class="header">Videos</h4>
+        <div class="videos">
+            {% for video in videos %}
+            <div class="content-section">
+                <p>{{video.title}}</p>
+                <a href="https://www.youtube.com/watch?v={{video.id}}" target="_blank">
+                    <img src="{{video.thumbnail}}" alt="{{video.title}}">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock 'content' %}

@@ -4,27 +4,16 @@ import urllib.request
 import json
 import praw
 from praw.models import MoreComments
+from .teams import TEAMS
 
 
-def api_request(url):
-    req_headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Connection': 'keep-alive',
-        'Host': 'stats.nba.com',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-    }
-    req = requests.get(url, headers=req_headers)
-    req.raise_for_status()
-    if req.status_code == 200:
-        return req.json()
-    else:
-        raise Exception('Something went wrong with request to NBA!')
+def _get_json(url):
+    with urllib.request.urlopen(url) as url_res:
+        raw_data = json.loads(url_res.read().decode())
+    return raw_data
 
 
-def split_array(arr, size):
+def _split_array(arr, size):
     arrs = []
     while len(arr) > size:
         pice = arr[:size]
@@ -38,8 +27,8 @@ def today_games_list():
     today = timezone.now() + timezone.timedelta(days=-2)
     today = today.strftime("%Y-%m-%d")
     url = "https://stats.nba.com/js/data/widgets/scores_leaders.json"
-    response = api_request(url)['items'][0]['items'][0]
-    arrs = split_array(response['playergametats'], 2)
+    response = _get_json(url)['items'][0]['items'][0]
+    arrs = _split_array(response['playergametats'], 2)
     data = []
     for arr in arrs:
         data.append(
@@ -61,64 +50,12 @@ def today_games_list():
                 }
             }
         )
-
-    # url = f"https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate={today}&LeagueID=00"
-    # response = api_request(url)
-    # games_list = [game[2] for game in response['resultSets'][0]['rowSet']]
-    # if not games_list:
-    #     return []
-    # leaders_row = response['resultSets'][7]['rowSet']
-    # leaders = []
-    # arrs = split_array(leaders_row, 2)
-    # for arr in arrs:
-    #     leaders.append({
-    #         'id': arr[0][0],
-    #         'home_team_short': arr[1][4],
-    #         'away_team_short': arr[0][4],
-    #         'home_leaders': {
-    #             'pts': arr[1][6] + " - " + str(arr[1][7]),
-    #             'reb': arr[1][9] + " - " + str(arr[1][10]),
-    #             'ast': arr[1][12] + " - " + str(arr[1][13])},
-    #         'away_leaders': {
-    #             'pts': arr[0][6] + " - " + str(arr[0][7]),
-    #             'reb': arr[0][9] + " - " + str(arr[0][10]),
-    #             'ast': arr[0][12] + " - " + str(arr[0][13])}
-    #     })
-
-    # scores = []
-    # for game in games_list:
-    #     url = f"https://stats.nba.com/stats/boxscoresummaryv2?GameID={game}"
-    #     response = api_request(url)
-    #     row = response['resultSets'][5]['rowSet']
-    #     if row[0][-1] > row[1][-1]:
-    #         winner = 'home'
-    #     else:
-    #         winner = 'away'
-    #     scores.append({
-    #         'id': game,
-    #         'home_team': row[0][5] + " " + row[0][6],
-    #         'away_team': row[1][5] + " " + row[1][6],
-    #         'home_team_score': row[0][-1],
-    #         'away_team_score': row[1][-1],
-    #         'winner': winner,
-    #     })
-
-    # data = []
-    # for score, leader in zip(scores, leaders):
-    #     data.append({**score, **leader})
-
     return data
 
 
-def get_json(url):
-    with urllib.request.urlopen(url) as url_res:
-        raw_data = json.loads(url_res.read().decode())
-    return raw_data
-
-
 def get_boxscore(game_id):
-    raw_data = get_json(
-        f"https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/00{game_id}_gamedetail.json")['g']
+    url = f"https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/00{game_id}_gamedetail.json"
+    raw_data = _get_json(url)['g']
 
     data = {
         'game_id': raw_data['gid'],
@@ -151,6 +88,10 @@ def get_boxscore(game_id):
         'away_players': raw_data['vls']['pstsg'],
     }
     return data
+
+
+def get_standings():
+    pass
 
 
 def get_reddit_posts():
@@ -187,3 +128,18 @@ def get_reddit_posts():
             }
         })
     return data
+
+
+def get_youtube_videos():
+    videos = []
+    url = "https://www.googleapis.com/youtube/v3/search?channelId=UCWJ2lWNubArHWmf3FIHbfcQ&maxResults=20&order=date&part=snippet&key=AIzaSyA1p0Gsy_cSIF6BVz9qpTWy9law8Z9_FBA"
+    req = requests.get(url)
+    req.raise_for_status()
+    res = req.json()['items']
+    for video in res:
+        videos.append({
+            'id': video['id']['videoId'],
+            'title': video['snippet']['title'],
+            'thumbnail': video['snippet']['thumbnails']['medium']['url']
+        })
+    return videos

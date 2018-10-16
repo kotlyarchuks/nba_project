@@ -2,7 +2,7 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 import json
 from django.core import serializers
-from .utils import api_request, today_games_list, get_json, get_boxscore, get_reddit_posts
+from .utils import today_games_list, get_boxscore, get_reddit_posts, get_youtube_videos
 from .forms import CommentForm
 from .models import Comment, Post, PostComment
 
@@ -13,8 +13,9 @@ from .models import Comment, Post, PostComment
 def index(request):
     data = today_games_list()
     posts = Post.objects.all()
+    videos = get_youtube_videos()
 
-    return render(request, 'games/index.html', {'data': data, 'posts': posts})
+    return render(request, 'games/index.html', {'data': data, 'posts': posts, 'videos': videos})
 
 
 def detail(request, game_id):
