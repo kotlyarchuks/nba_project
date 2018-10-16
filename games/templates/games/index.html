@@ -82,8 +82,33 @@
 <div class="col-4 side-content">
     <div class="sidebar-content">
         <h4 class="header">Standings</h4>
-        <div class="standings content-section">
-            There will be standings table
+        <div class="standings content-section row">
+            <div class="col-6">
+                <span class="standings__title">East</span>
+                {% for st in standings.east %}
+                <div class="standings__row row justify-content-center">
+                    <div class="col-4">
+                        {{st.team}}
+                    </div>
+                    <div class="col-4">
+                        {{st.win}}-{{st.loss}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-6">
+                <span class="standings__title">West</span>
+                {% for st in standings.west %}
+                <div class="standings__row row justify-content-center">
+                    <div class="col-4">
+                        {{st.team}}
+                    </div>
+                    <div class="col-4">
+                        {{st.win}}-{{st.loss}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="leaders content-section">
             There will be leaders table

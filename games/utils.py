@@ -27,8 +27,8 @@ def today_games_list():
     today = timezone.now() + timezone.timedelta(days=-2)
     today = today.strftime("%Y-%m-%d")
     url = "https://stats.nba.com/js/data/widgets/scores_leaders.json"
-    response = _get_json(url)['items'][0]['items'][0]
-    arrs = _split_array(response['playergametats'], 2)
+    raw_data = _get_json(url)['items'][0]['items'][0]
+    arrs = _split_array(raw_data['playergametats'], 2)
     data = []
     for arr in arrs:
         data.append(
@@ -91,7 +91,25 @@ def get_boxscore(game_id):
 
 
 def get_standings():
-    pass
+    url = "https://data.nba.net/prod/v2/current/standings_conference.json"
+    raw_data = _get_json(url)['league']['standard']['conference']
+    data = {
+        'east': [],
+        'west': []
+    }
+    for team in raw_data['east']:
+        data['east'].append({
+            'team': TEAMS[team['teamId']],
+            'win': team['win'],
+            'loss': team['loss']
+        })
+    for team in raw_data['west']:
+        data['west'].append({
+            'team': TEAMS[team['teamId']],
+            'win': team['win'],
+            'loss': team['loss']
+        })
+    return data
 
 
 def get_reddit_posts():
