@@ -133,3 +133,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+CRONJOBS = [
+    ('*/30 * * * *', 'games.cron.get_posts')
+]
