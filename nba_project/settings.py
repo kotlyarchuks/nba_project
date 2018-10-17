@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '#pfq_hdkpgw3odi+ih*s!@83z_*btw=-v337-2*^l0*fuq!@1$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['kooch.online', 'localhost']
 
@@ -126,6 +126,7 @@ DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S'
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
