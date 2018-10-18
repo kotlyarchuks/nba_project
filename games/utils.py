@@ -34,19 +34,19 @@ def today_games_list():
         data.append(
             {
                 'id': arr[0]['GAME_ID'],
-                'home_team': arr[0]['TEAM_CITY'] + " " + arr[0]['TEAM_NICKNAME'],
-                'away_team': arr[1]['TEAM_CITY'] + " " + arr[1]['TEAM_NICKNAME'],
-                'home_team_short': arr[0]['TEAM_ABBREVIATION'],
-                'away_team_short': arr[1]['TEAM_ABBREVIATION'],
+                'home_team': arr[1]['TEAM_CITY'] + " " + arr[1]['TEAM_NICKNAME'],
+                'away_team': arr[0]['TEAM_CITY'] + " " + arr[0]['TEAM_NICKNAME'],
+                'home_team_short': arr[1]['TEAM_ABBREVIATION'],
+                'away_team_short': arr[0]['TEAM_ABBREVIATION'],
                 'home_leaders': {
-                    'pts': arr[0]['PTS_PLAYER_NAME'] + " - " + str(arr[0]['PTS']),
-                    'reb': arr[0]['REB_PLAYER_NAME'] + " - " + str(arr[0]['REB']),
-                    'ast': arr[0]['AST_PLAYER_NAME'] + " - " + str(arr[0]['AST'])
-                },
-                'away_leaders': {
                     'pts': arr[1]['PTS_PLAYER_NAME'] + " - " + str(arr[1]['PTS']),
                     'reb': arr[1]['REB_PLAYER_NAME'] + " - " + str(arr[1]['REB']),
                     'ast': arr[1]['AST_PLAYER_NAME'] + " - " + str(arr[1]['AST'])
+                },
+                'away_leaders': {
+                    'pts': arr[0]['PTS_PLAYER_NAME'] + " - " + str(arr[0]['PTS']),
+                    'reb': arr[0]['REB_PLAYER_NAME'] + " - " + str(arr[0]['REB']),
+                    'ast': arr[0]['AST_PLAYER_NAME'] + " - " + str(arr[0]['AST'])
                 }
             }
         )
