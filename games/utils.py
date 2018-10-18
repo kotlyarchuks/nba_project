@@ -29,25 +29,25 @@ def today_games_list():
     url = "https://stats.nba.com/js/data/widgets/scores_leaders.json"
     raw_data = _get_json(url)['items'][0]['items'][0]
     arrs = _split_array(raw_data['playergametats'], 2)
-    data = []
+    leaders = []
     for arr in arrs:
-        data.append(
+        leaders.append(
             {
                 'id': arr[0]['GAME_ID'],
-                'home_team': arr[1]['TEAM_CITY'] + " " + arr[1]['TEAM_NICKNAME'],
-                'away_team': arr[0]['TEAM_CITY'] + " " + arr[0]['TEAM_NICKNAME'],
-                'home_team_short': arr[1]['TEAM_ABBREVIATION'],
-                'away_team_short': arr[0]['TEAM_ABBREVIATION'],
-                'home_leaders': {
-                    'pts': arr[1]['PTS_PLAYER_NAME'] + " - " + str(arr[1]['PTS']),
-                    'reb': arr[1]['REB_PLAYER_NAME'] + " - " + str(arr[1]['REB']),
-                    'ast': arr[1]['AST_PLAYER_NAME'] + " - " + str(arr[1]['AST'])
-                },
-                'away_leaders': {
-                    'pts': arr[0]['PTS_PLAYER_NAME'] + " - " + str(arr[0]['PTS']),
-                    'reb': arr[0]['REB_PLAYER_NAME'] + " - " + str(arr[0]['REB']),
-                    'ast': arr[0]['AST_PLAYER_NAME'] + " - " + str(arr[0]['AST'])
-                }
+                'leaders': [
+                    {
+                        'team_abbr': arr[1]['TEAM_ABBREVIATION'],
+                        'pts': arr[1]['PTS_PLAYER_NAME'] + " - " + str(arr[1]['PTS']),
+                        'reb': arr[1]['REB_PLAYER_NAME'] + " - " + str(arr[1]['REB']),
+                        'ast': arr[1]['AST_PLAYER_NAME'] + " - " + str(arr[1]['AST'])
+                    },
+                    {
+                        'team_abbr': arr[0]['TEAM_ABBREVIATION'],
+                        'pts': arr[0]['PTS_PLAYER_NAME'] + " - " + str(arr[0]['PTS']),
+                        'reb': arr[0]['REB_PLAYER_NAME'] + " - " + str(arr[0]['REB']),
+                        'ast': arr[0]['AST_PLAYER_NAME'] + " - " + str(arr[0]['AST'])
+                    }
+                ]
             }
         )
 
@@ -61,19 +61,32 @@ def today_games_list():
             winner = 'home'
         scores.append({
             'id': game['gid'],
-            'away_score': game['v']['s'],
+            'home_team': game['h']['tc'] + " " + game['h']['tn'],
+            'home_team_short': game['h']['ta'],
             'home_score': game['h']['s'],
+            'away_team': game['v']['tc'] + " " + game['v']['tn'],
+            'away_team_short': game['v']['ta'],
+            'away_score': game['v']['s'],
             'winner': winner
         })
-    for game in data:
+    for game in leaders:
         for score in scores:
             if score['id'] == game['id']:
+                for leader in game['leaders']:
+                    if leader['team_abbr'] == score['home_team_short']:
+                        game['home_leaders'] = leader
+                    else:
+                        game['away_leaders'] = leader
                 game['away_score'] = score['away_score']
+                game['away_team'] = score['away_team']
+                game['away_team_short'] = score['away_team_short']
                 game['home_score'] = score['home_score']
+                game['home_team'] = score['home_team']
+                game['home_team_short'] = score['home_team_short']
                 game['winner'] = score['winner']
                 break
 
-    return data
+    return leaders
 
 
 def get_boxscore(game_id):
@@ -210,3 +223,15 @@ def get_youtube_videos():
             'thumbnail': video['snippet']['thumbnails']['medium']['url']
         })
     return videos
+
+
+def get_recap(q):
+    url = f"https://www.googleapis.com/youtube/v3/search?channelId=UCoh_z6QB0AGB1oxWufvbDUg&maxResults=1&order=date&part=snippet&key=AIzaSyA1p0Gsy_cSIF6BVz9qpTWy9law8Z9_FBA&q={q}"
+    req = requests.get(url)
+    req.raise_for_status()
+    res = req.json()['items'][0]
+    return {
+        'id': res['id']['videoId'],
+        'title': res['snippet']['title'],
+        'thumbnail': res['snippet']['thumbnails']['medium']['url']
+    }

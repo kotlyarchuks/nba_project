@@ -106,8 +106,8 @@
 {% block 'content' %}
 <div class="col-12">
     <h2 class="mt-5 mb-3 header">{{data.home_team}} {{data.score}} {{data.away_team}}</h2>
-    <div class="row">
-        <div class="col-4 stats__team">
+    <div class="row justify-content-center mb-4">
+        <div class="col-4 stats__team mr-5">
             <div class="row stats__header_row stats__row">
                 <div class="col-4">
                     {{data.home_team_short}}
@@ -127,6 +127,14 @@
                 <div class="col-4">{{data.home_3p.3pm}}/{{data.home_3p.3pa}} ({{data.home_3p.3pp}})</div>
                 <div class="col-4">3P</div>
                 <div class="col-4">{{data.away_3p.3pm}}/{{data.away_3p.3pa}} ({{data.away_3p.3pp}})</div>
+            </div>
+        </div>
+        <div class="recap col-4">
+            <div class="recap__title">Recap</div>
+            <div>
+                <a href="https://www.youtube.com/watch?v={{recap.id}}" target="_blank">
+                    <img src="{{recap.thumbnail}}" alt="{{recap.title}}" class="img-fluid">
+                </a>
             </div>
         </div>
     </div>

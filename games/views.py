@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 import json
 from django.core import serializers
-from .utils import today_games_list, get_boxscore, get_reddit_posts, get_youtube_videos, get_standings, get_leaders
+from .utils import today_games_list, get_boxscore, get_reddit_posts, get_youtube_videos, get_standings, get_leaders, get_recap
 from .forms import CommentForm
 from .models import Comment, Post, PostComment
 
@@ -30,6 +30,7 @@ def index(request):
 @login_required
 def detail(request, game_id):
     data = get_boxscore(game_id)
+    recap = get_recap(f"{data['away_team']} vs {data['home_team']}")
     comments = Comment.objects.filter(game=game_id).order_by('-pub_date')
 
     if request.is_ajax():
@@ -59,5 +60,5 @@ def detail(request, game_id):
     return render(
         request,
         'games/detail.html',
-        {'data': data, 'form': form, 'comments': comments}
+        {'data': data, 'form': form, 'comments': comments, 'recap': recap}
     )

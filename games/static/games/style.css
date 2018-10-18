@@ -110,6 +110,10 @@ nav {
     font-size: 14px;
 }
 
+.recap__title {
+    text-align: center;
+}
+
 .boxscore {
     margin-bottom: 25px;
 }
