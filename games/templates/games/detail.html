@@ -129,13 +129,11 @@
                 <div class="col-4">{{data.away_3p.3pm}}/{{data.away_3p.3pa}} ({{data.away_3p.3pp}})</div>
             </div>
         </div>
-        <div class="recap col-4">
-            <div class="recap__title">Recap</div>
-            <div>
-                <a href="https://www.youtube.com/watch?v={{recap.id}}" target="_blank">
-                    <img src="{{recap.thumbnail}}" alt="{{recap.title}}" class="img-fluid">
-                </a>
-            </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="recap col-8">
+            <iframe src="https://www.youtube.com/embed/{{recap.id}}?rel=0" frameborder="0" allow="autoplay; encrypted-media"
+                allowfullscreen></iframe>
         </div>
     </div>
     <h3 class="header">{{data.home_team_short}}</h3>

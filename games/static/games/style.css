@@ -110,8 +110,20 @@ nav {
     font-size: 14px;
 }
 
-.recap__title {
-    text-align: center;
+.recap {
+    position: relative;
+     width: 100%;
+     height: 0;
+     padding-bottom: 36.25%;
+     margin-bottom: 45px;
+}
+
+.recap iframe {
+    position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
 }
 
 .boxscore {
